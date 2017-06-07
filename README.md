@@ -1,6 +1,6 @@
-
 ###例子###
 
 ```javascript
-  npm start
+yarn install / npm install  
+yarn start / npm start
 ```
