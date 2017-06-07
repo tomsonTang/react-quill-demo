@@ -18,14 +18,15 @@ class NewsPageContent extends Component {
     this.handlerChange = this.handlerChange.bind(this);
   }
 
-  handlerChange(value){
-    this.setState({text:value});
+  handlerChange(source){
+    console.log(source);
+    // this.setState({text:value});
   }
 
   render() {
     return (
     <div style={{background:'#fff'}}>
-     <ReactQuill value={this.state.text} />
+     <ReactQuill value={this.state.text} onChange={this.handlerChange}/>
      <Row style={{paddingTop:'10px',paddingBottom:'10px',paddingLeft:'20px'}}>
       <Col span={6}>
         <Button size="large">保存</Button>

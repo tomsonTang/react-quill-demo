@@ -11,7 +11,10 @@ import NewsPage from '../pages/newsPage'
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
-
+/**
+ * 侧边栏
+ * @param {*} props 
+ */
 const Sub1 = (props)=>{
   return (
     <Menu mode="inline"
@@ -28,22 +31,27 @@ const Sub1 = (props)=>{
   )
 }
 
+/**
+ * 主体框架
+ * @param {*} param0 
+ */
 const Layout1 = ({state,props,match,location})=>{
-
-  const id = new RegExp(match.path+'/\d').exec(location.pathname);
 
   return (
     <Layout style={fullPageHightStyle}>
-          
+      {/* 侧边栏 */}
       <Sider width={200} style={{ background: '#fff' }}>
         <Sub1 index={match.params.id}/>
       </Sider>
+      {/* 正文栏 */}
       <Layout style={{ padding: '0 24px 24px' }}>
+      {/* 面包屑 */}
         <Breadcrumb style={{ margin: '12px 0' }}>
           <Breadcrumb.Item>Home</Breadcrumb.Item>
           <Breadcrumb.Item>内容管理</Breadcrumb.Item>
           <Breadcrumb.Item>新建图文</Breadcrumb.Item>
         </Breadcrumb>
+        
         <Route path="/nav-1/:id" component={NewsPage}></Route>
       </Layout>
     </Layout>

@@ -9,7 +9,7 @@ class NewsPageContent extends Component {
     super(props);
 
     this.state = {
-      text:`<h2 class="ql-align-center">Hello World!从这里开始写正文</h2>`
+      text:`<p>Hello World! 从这开始写正文</p>`
     }
 
     this.handlerChange = this.handlerChange.bind(this);

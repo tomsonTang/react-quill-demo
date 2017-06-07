@@ -5,10 +5,12 @@ import Quill from 'quill';
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 
+import $ from 'jquery';
+
 // import _ from 'lodash';
 
 const defaultOptions = {
-    debug: 'info',
+    debug: 'error',
     modules: {
       toolbar: '#toolbar'
     },
@@ -27,21 +29,23 @@ export default class MyEditor extends React.Component{
   constructor(props){
     super(props);
 
+    // dom 引用
     this.editorDIV = null;
     this.editorTooBarDIV = null;
+    // quill 实例(富文本)
     this.quill = null;
 
-    // 提取 props 中的 defaultOptions 相关内容并覆盖 
-    // 有数组需要重新制定覆盖策略
-    // this.options = _.defaultsDeep(defaultOptions, _.pick(props, _.keys(defaultOptions)));
+    // 参数
     this.options = defaultOptions;
     
+    // 初始化正文内容
     this.value = props.value;
 
     this.state = {
       isNeedCloseToolBar : false,
     }
 
+    // 默认的工具栏 className 用于处理当标题框和作者框编写时不允许使用工具栏
     this.toolBarClassName = '';
 
     this.closeToolBar = this.closeToolBar.bind(this);
@@ -53,6 +57,10 @@ export default class MyEditor extends React.Component{
     this.options.modules.toolbar = this.editorTooBarDIV;
     
     this.quill = new Quill(this.editorDIV, this.options);
+    // 当文本内容发送改变时通知父组件
+    this.quill.on('text-change',()=>{
+      this.props.onChange($(this.editorDIV).find('.ql-editor').html());
+    });
 
     this.toolBarClassName = this.editorTooBarDIV.className;
 
@@ -74,9 +82,10 @@ export default class MyEditor extends React.Component{
     return (
       // {/* Create the editor container */}
       <div className="special-editor-container">
+        {/* 工具栏定义 */}
         <div ref={(editorTooBarDIV)=>{this.editorTooBarDIV = editorTooBarDIV}} className={this.getClassName()}>
-        <span className="ql-formats">
-          <select className="ql-font"></select>
+          <span className="ql-formats">
+            <select className="ql-font"></select>
             {/*Add font size dropdown*/}
             <select className="ql-size">
               <option value="small"></option>
@@ -143,24 +152,28 @@ export default class MyEditor extends React.Component{
             <button className="ql-clean"></button>
           </span>
         </div>
-
+        {/* 工具栏定义结束 */}
+      
         <div style={{border:'1px solid #ccc',borderTop:'none'}}>
           <div>
             
+            {/* 这是标题区 */}
             <div style={{paddingTop:'30px'}}>
-              <input type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} onBlur={this.openToolBar} />
+              <input type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} />
             </div>
 
+            {/* 这是作者区 */}
             <div style={{paddingTop:'18px'}}>
-              <input type="text" placeholder="请输入作者" className = "author"  onFocus={this.closeToolBar} onBlur={this.openToolBar} />
+              <input type="text" placeholder="请输入作者" className = "author"  onFocus={this.closeToolBar} />
             </div>
 
+            {/* 构造一条分割线 */}
             <div className="line"></div>
 
           </div>
           
-
-          <div ref={ (editorDIV) =>{ this.editorDIV = editorDIV; }} dangerouslySetInnerHTML={this.value.length ? createMarkup(this.value):''}></div>
+          {/* 实际正文编辑区 */}
+          <div ref={ (editorDIV) =>{ this.editorDIV = editorDIV; }} dangerouslySetInnerHTML={this.value.length ? createMarkup(this.value):''} onFocus={this.openToolBar} ></div>
         </div>
 
       </div>
