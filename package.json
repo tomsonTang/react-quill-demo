@@ -1,0 +1,26 @@
+{
+  "name": "react-draff-demo",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "antd": "^2.10.4",
+    "draft-js": "^0.10.1",
+    "jquery": "^3.2.1",
+    "lodash": "^4.17.4",
+    "quill": "^1.2.5",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-quill": "^1.0.0-rc.2",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

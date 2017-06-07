@@ -1,0 +1,1 @@
+export const ADD_NEWS_TYPE_BLANK = 1;
