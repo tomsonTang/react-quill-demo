@@ -37,6 +37,8 @@ export default class MyEditor extends React.Component{
     // dom 引用
     this.editorDIV = null;
     this.editorTooBarDIV = null;
+    this.titleInput = null;
+    this.authorInput = null;
     // quill 实例(富文本)
     this.quill = null;
 
@@ -57,8 +59,13 @@ export default class MyEditor extends React.Component{
     this.options.modules.toolbar.container = this.editorTooBarDIV;
     this.quill = new Quill(this.editorDIV, this.options);
     // 当文本内容发送改变时通知父组件
+    
     this.quill.on('text-change',()=>{
-      this.props.onChange($(this.editorDIV).find('.ql-editor').html());
+      this.props.onChange({
+        editorContent:$(this.editorDIV).find('.ql-editor').html(),//编辑器内容
+        title:$(this.titleInput).val(),
+        author:$(this.authorInput).val()
+      });
     });
 
     const toolbar = this.quill.getModule('toolbar');
@@ -203,12 +210,12 @@ export default class MyEditor extends React.Component{
             
             {/* 这是标题区 */}
             <div style={{paddingTop:'30px'}}>
-              <input type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} />
+              <input ref={(titleInput)=>{this.titleInput = titleInput}} type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} />
             </div>
 
             {/* 这是作者区 */}
             <div style={{paddingTop:'18px'}}>
-              <input type="text" placeholder="请输入作者" className = "author"  onFocus={this.closeToolBar} />
+              <input ref={(authorInput)=>{this.authorInput = authorInput}} type="text" placeholder="请输入作者" className = "author"  onFocus={this.closeToolBar} />
             </div>
 
             {/* 构造一条分割线 */}

@@ -67,6 +67,8 @@ class NewsPageContent extends Component {
       isShow:this.state.uploadModalvisible, //是否打开图片上传窗口
       emitClose:this.closePictureUploadModal, //关闭图片上传窗口
       fileListChange:this.emitPitcureListChange, //上传图片更新
+      submitButtonText:'插入',
+      cancleButtonText:'取消'
     }
 
     const reactQuillProps = {

@@ -82,8 +82,8 @@ class fileUpload extends React.Component {
         <Modal
           {...modalProps}
           footer={[
-            <Button {...backButtonProps}>Return</Button>,
-            <Button {...submitButtonProps}> Submit </Button>
+            <Button {...backButtonProps}> {this.props.cancleButtonText || '取消'} </Button>,
+            <Button {...submitButtonProps}> {this.props.submitButtonText || '确认'} </Button>
           ]}
         >
           <PicturesWall onfileListChange={ this.filterFIleUpload } defaultFileList={this.state.fileList} />
