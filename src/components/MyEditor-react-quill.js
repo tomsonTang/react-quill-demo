@@ -1,9 +1,7 @@
-
 import React from 'react';
+import ReactQuill from 'react-quill';
 
 import Quill from 'quill';
-import ImageBlot from './ImageBlot.js'
-
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
 
@@ -11,37 +9,13 @@ import $ from 'jquery';
 
 // import _ from 'lodash';
 
-const defaultOptions = {
-    debug: 'error',
-    modules: {
-      toolbar: {
-        container:'#toolbar',
-        handlers:{}
-      }
-    },
-    placeholder: 'Compose an epic...',
-    // readOnly: true,
-    theme: 'snow'
-};
-
-const createMarkup = (innerHTML) => {
-    return {__html: innerHTML};
-}
-
-
 export default class MyEditor extends React.Component{
 
   constructor(props){
     super(props);
 
     // dom 引用
-    this.editorDIV = null;
     this.editorTooBarDIV = null;
-    // quill 实例(富文本)
-    this.quill = null;
-
-    // 参数
-    this.options = defaultOptions;
 
     this.state = {
       isNeedCloseToolBar : false,
@@ -49,80 +23,30 @@ export default class MyEditor extends React.Component{
 
     // 默认的工具栏 className 用于处理当标题框和作者框编写时不允许使用工具栏
     this.toolBarClassName = '';
+
+    this.closeToolBar = this.closeToolBar.bind(this);
+    this.openToolBar = this.openToolBar.bind(this);
+    this.getClassName = this.getClassName.bind(this);
   }
 
   componentDidMount() {
-    Quill.register(ImageBlot);
-
-    this.options.modules.toolbar.container = this.editorTooBarDIV;
-    this.quill = new Quill(this.editorDIV, this.options);
-    // 当文本内容发送改变时通知父组件
-    this.quill.on('text-change',()=>{
-      this.props.onChange($(this.editorDIV).find('.ql-editor').html());
-    });
-
-    const toolbar = this.quill.getModule('toolbar');
-
-    // 注册 image 按钮事件
-    toolbar.addHandler('image', ()=>{
-
-      this.props.emitShowPictureUploadModula(this.pictureFileListChange)
-    });
-
-    
-    // toolbar.addHandler('image', function(...args){
-    //   console.log(args);
-    // });
-
-    // 获取 ToolBar 的原始样式
     this.toolBarClassName = this.editorTooBarDIV.className;
-
   }
 
-  /**
-   * file 结构 
-   * {
-   *   uid: 'uid',      // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
-   *   name: 'xx.png'   // 文件名
-   *   status: 'done',  // 状态有：uploading done error removed
-   *   response: '{"status": "success"}',  // 服务端响应内容
-   * }
-   * 
-   * @param {any} fileList 
-   * 
-   * @memberof MyEditor
-   */
-  pictureFileListChange = (fileList) =>{
 
-    console.log('resp',resp);
-    let range = this.quill.getSelection(true);
-    this.quill.insertText(range.index, '\n', Quill.sources.USER);
-
-    fileList.forEach((file,index)=>{
-      this.quill.insertEmbed(range.index + 1 + index, 'image', {
-        alt: file.name,
-        url: file.url
-      }, Quill.sources.USER);
-    });
-    this.quill.setSelection(range.index + fileList.length, Quill.sources.SILENT);
-  }
-
-  closeToolBar = (e)=>{
+  closeToolBar(e){
     this.setState({isNeedCloseToolBar:true})
   }
 
-  openToolBar = (e)=>{
+  openToolBar(e){
     this.setState({isNeedCloseToolBar:false})
   }
 
-  getClassName = ()=>{
+  getClassName(){
     return this.state.isNeedCloseToolBar ? `${this.toolBarClassName} close`: this.toolBarClassName
   }
 
   render() {
-
-    const { value } = this.props;
-
     return (
       // {/* Create the editor container */}
       <div className="special-editor-container">
@@ -188,7 +112,7 @@ export default class MyEditor extends React.Component{
 
           <span className="ql-formats">
             <button className="ql-image"></button>
-            <button className="ql-link"></button>
+            <button className="ql-video"></button>
             <button className="ql-formula"></button>
           </span>
        
@@ -215,12 +139,14 @@ export default class MyEditor extends React.Component{
             <div className="line"></div>
 
           </div>
+
+          <ReactQuill value={this.props.value} onChange={this.props.handleChange}></ReactQuill>
           
           {/* 实际正文编辑区 */}
-          <div ref={ (editorDIV) =>{ this.editorDIV = editorDIV; }} dangerouslySetInnerHTML={ value.length ? createMarkup( value ):''} onFocus={this.openToolBar} ></div>
         </div>
 
       </div>
     );
   }
 }
+

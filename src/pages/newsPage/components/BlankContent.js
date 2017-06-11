@@ -1,7 +1,8 @@
 
 import React, { Component } from 'react';
 
-import ReactQuill from '../../../components/MyEditor-quill.js'
+import ReactQuill from '../../../components/MyEditor-test'
+// import ReactQuill from '../../../components/MyEditor-quill.js'
 
 class NewsPageContent extends Component {
 
