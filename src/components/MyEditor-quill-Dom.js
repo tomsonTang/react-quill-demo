@@ -94,7 +94,7 @@ export default class MyEditor extends React.Component{
    */
   pictureFileListChange = (fileList) =>{
 
-    console.log('resp',resp);
+    console.log('resp',fileList);
     let range = this.quill.getSelection(true);
     this.quill.insertText(range.index, '\n', Quill.sources.USER);
 
