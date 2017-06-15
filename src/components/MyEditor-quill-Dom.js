@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import Quill from 'quill';
@@ -6,8 +5,6 @@ import ImageBlot from './ImageBlot.js'
 
 import 'quill/dist/quill.core.css';
 import 'quill/dist/quill.snow.css';
-
-import $ from 'jquery';
 
 // import _ from 'lodash';
 
@@ -58,35 +55,29 @@ export default class MyEditor extends React.Component{
 
     this.options.modules.toolbar.container = this.editorTooBarDIV;
     this.quill = new Quill(this.editorDIV, this.options);
+    // 获取 ToolBar 的原始样式 必须在实例化之后获取
+    this.toolBarClassName = this.editorTooBarDIV.className;
+
     // 当文本内容发送改变时通知父组件
-    
     this.quill.on('text-change',()=>{
       this.props.onChange({
-        editorContent:$(this.editorDIV).find('.ql-editor').html(),//编辑器内容
-        title:$(this.titleInput).val(),
-        author:$(this.authorInput).val()
+        editorContent:this.editorDIV.querySelector('.ql-editor').innerHTML,//编辑器内容
+        title:this.titleInput.value,
+        author:this.authorInput.value
       });
     });
 
-    const toolbar = this.quill.getModule('toolbar');
-
     // 注册 image 按钮事件
-    toolbar.addHandler('image', ()=>{
-
+    this.quill.getModule('toolbar').addHandler('image', ()=>{
+      // 像父组件注入回调 当添加完上传图片后执行回调
       this.props.emitShowPictureUploadModula(this.pictureFileListChange)
     });
 
-    
-    // toolbar.addHandler('image', function(...args){
-    //   console.log(args);
-    // });
-
-    // 获取 ToolBar 的原始样式
-    this.toolBarClassName = this.editorTooBarDIV.className;
 
   }
 
   /**
+   * 拿到上传图片 插入正文
    * file 结构 
    * {
    *   uid: 'uid',      // 文件唯一标识，建议设置为负数，防止和内部产生的 id 冲突
@@ -114,14 +105,29 @@ export default class MyEditor extends React.Component{
     this.quill.setSelection(range.index + fileList.length, Quill.sources.SILENT);
   }
 
+  /**
+   * 关闭 ToolBar
+   * 
+   * @memberof MyEditor
+   */
   closeToolBar = (e)=>{
     this.setState({isNeedCloseToolBar:true})
   }
 
+  /**
+   * 启动 ToolBar
+   * 
+   * @memberof MyEditor
+   */
   openToolBar = (e)=>{
     this.setState({isNeedCloseToolBar:false})
   }
 
+  /**
+   * 通过切换样式来启用关闭 
+   * 
+   * @memberof MyEditor
+   */
   getClassName = ()=>{
     return this.state.isNeedCloseToolBar ? `${this.toolBarClassName} close`: this.toolBarClassName
   }
