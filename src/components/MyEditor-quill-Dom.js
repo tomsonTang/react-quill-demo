@@ -50,6 +50,20 @@ export default class MyEditor extends React.Component{
     this.toolBarClassName = '';
   }
 
+  /**
+   * 通知父组件内容更新
+   * 
+   * 
+   * @memberof MyEditor
+   */
+  emitChange = ()=>{
+    this.props.onChange({
+        editorContent:this.editorDIV.querySelector('.ql-editor').innerHTML,//编辑器内容
+        title:this.titleInput.value,
+        author:this.authorInput.value
+    });
+  }
+
   componentDidMount() {
     Quill.register(ImageBlot);
 
@@ -59,13 +73,7 @@ export default class MyEditor extends React.Component{
     this.toolBarClassName = this.editorTooBarDIV.className;
 
     // 当文本内容发送改变时通知父组件
-    this.quill.on('text-change',()=>{
-      this.props.onChange({
-        editorContent:this.editorDIV.querySelector('.ql-editor').innerHTML,//编辑器内容
-        title:this.titleInput.value,
-        author:this.authorInput.value
-      });
-    });
+    this.quill.on('text-change',this.emitChange);
 
     // 注册 image 按钮事件
     this.quill.getModule('toolbar').addHandler('image', ()=>{
@@ -216,7 +224,7 @@ export default class MyEditor extends React.Component{
             
             {/* 这是标题区 */}
             <div style={{paddingTop:'30px'}}>
-              <input ref={(titleInput)=>{this.titleInput = titleInput}} type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} />
+              <input ref={(titleInput)=>{this.titleInput = titleInput}} type="text" placeholder="请在这里输入标题" className = "title" onFocus={this.closeToolBar} onInput={this.emitChange}/>
             </div>
 
             {/* 这是作者区 */}
